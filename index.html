@@ -216,26 +216,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // --- LOGIKA TRACKING ---
-            // Ambil parameter 'id' dari URL (contoh: site.com?id=smartlink123)
-            const params = new URLSearchParams(window.location.search);
-            const refId = params.get('id');
-            
-            if (refId) {
-                // Buat URL tracking lengkap
-                const trackingUrl = `https://report.greysyaa.lol/track?cid=${refId}`;
-                console.log("Tracking URL:", trackingUrl);
-
-                // Kirim request tracking menggunakan Image Object (Metode paling stabil untuk tracking pixel)
-                // Ini akan mengirim request ke server tracking tanpa mengganggu user
-                const trackPixel = new Image();
-                trackPixel.src = trackingUrl;
-                
-                // Alternatif: Jika ingin menggunakan Fetch (Modern)
-                // fetch(trackingUrl, { method: 'GET', mode: 'no-cors', keepalive: true }).catch(() => {});
-            } else {
-                console.log("Tidak ditemukan parameter 'id' di URL untuk tracking.");
-            }
+            // --- TRACKING DIHAPUS ---
+            // Script pengiriman tracking pixel ke report.greysyaa.lol telah dihapus sesuai permintaan.
 
             // --- LOGIKA TAMPILAN (Gambar & Nama) ---
             
@@ -256,14 +238,11 @@
         function redirectUser() {
             const params = new URLSearchParams(window.location.search);
             const destination = params.get('dest');
-            const refId = params.get('id');
             
             if (destination) {
-                const finalDest = decodeURIComponent(destination);
-                const separator = finalDest.includes('?') ? '&' : '?';
-                
-                // Redirect membawa ID juga ke tujuan
-                window.location.href = finalDest + separator + 'id=' + refId;
+                // Langsung redirect ke tujuan bersih tanpa menambahkan parameter ID lagi
+                // ID akan dideteksi oleh backend (Worker) melalui IP atau parameter 'id' yang ada di URL awal
+                window.location.href = decodeURIComponent(destination);
             } else {
                 // Jika tidak ada destinasi spesifik, alert
                 alert("Link tujuan tidak ditemukan.");
