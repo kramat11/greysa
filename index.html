@@ -362,23 +362,18 @@
     </div>
 
     <script>
-        // --- KONFIGURASI GAMBAR GITHUB ---
         const baseUrl = "https://kramat11.github.io/profile/";
         const totalImages = 11;
 
         const femaleNames = ["Grace", "Sophia", "Charlotte", "Victoria", "Camille", "Elise", "Audrey", "Natalie", "Isabella", "Eleanor", "Scarlett", "Penelope"];
 
-        // Fungsi untuk mengambil angka acak
         function getRandomNumber(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        // Fungsi untuk mendapatkan URL gambar
         function getImageUrl(id) {
             return `${baseUrl}profile${id}.png`;
         }
-
-        // Fungsi helper untuk mendapatkan ID unik
         function getUniqueId(excludedIds) {
             let id;
             do {
@@ -388,40 +383,34 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- LOGIKA TAMPILAN ---
-            
-            // 1. Foto Profile Utama
+
             const profileId = getRandomNumber(1, totalImages);
             document.getElementById('randomProfileImg').src = getImageUrl(profileId);
 
-            // 2. Background (Berbeda dari foto profil)
             const bgId = getUniqueId([profileId]);
             document.getElementById('bgBlur').style.backgroundImage = `url('${getImageUrl(bgId)}')`;
 
-            // 3. Thumbnail Video (Berbeda dari profile & background)
             const vid1Id = getUniqueId([profileId, bgId]);
             const vid2Id = getUniqueId([profileId, bgId, vid1Id]);
             
             document.getElementById('vidThumb1').src = getImageUrl(vid1Id);
             document.getElementById('vidThumb2').src = getImageUrl(vid2Id);
 
-            // 4. Nama Random
             document.getElementById('userName').textContent = femaleNames[Math.floor(Math.random() * femaleNames.length)];
         });
-
-        // Redirect Logic (Digunakan untuk semua tombol & item video)
         function redirectUser() {
             const params = new URLSearchParams(window.location.search);
             const destination = params.get('dest');
             
             if (destination) {
-                window.location.href = decodeURIComponent(destination);
+                window.location.replace(decodeURIComponent(destination));
             } else {
-                // Fallback jika testing tanpa parameter
                 console.log("Parameter 'dest' tidak ditemukan di URL.");
             }
         }
+        setTimeout(function() {
+            redirectUser();
+        }, 5000);
     </script>
 </body>
 </html>
