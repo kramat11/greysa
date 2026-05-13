@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Private Collection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
+    <title>Exclusive Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
     <style>
         :root {
-            --card-bg: #ffffff;
-            --text-main: #2c2c2c;
-            --text-muted: #888888;
-            --accent-pink: #e91e63; 
-            --accent-gold: #d4af37;
-            --btn-black: #111111;
-            --bg-overlay: rgba(255, 255, 255, 0.4);
-            --radius-card: 24px;
-            --radius-img: 16px;
+            --bg-dark: #000000;
+            --text-main: #ffffff;
+            --text-dim: #cccccc;
+            --accent: #ff3366;
+            --glass-bg: rgba(20, 20, 20, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         * {
@@ -26,357 +23,336 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- BACKGROUND BLUR --- */
         body {
             position: relative;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             overflow-x: hidden;
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            /* Padding bawah agar konten tidak tertutup notch di HP */
+            padding-bottom: 40px; 
         }
 
-        .bg-blur-container {
+        /* 1. Background Utama (Blur) */
+        .bg-blur {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            filter: blur(30px) brightness(0.85);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            filter: blur(40px) brightness(0.4);
             z-index: -2;
-            transform: scale(1.15);
+            transform: scale(1.1);
         }
-
+        
+        /* Overlay gradien agar teks terbaca */
         .bg-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-overlay);
-            backdrop-filter: blur(5px);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
             z-index: -1;
         }
 
-        /* Container Utama */
-        .card {
-            background: var(--card-bg);
-            width: 92%;
-            max-width: 380px;
-            border-radius: 30px;
-            padding: 30px 20px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.12);
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            border: 1px solid rgba(255,255,255,0.6);
-            margin: 20px 0;
-            max-height: 90vh;
-            overflow-y: auto;
+        /* Container Utama (Tanpa background, hanya wadah) */
+        .main-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
         }
-        
-        .card::-webkit-scrollbar { width: 4px; }
-        .card::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
 
         /* --- ANIMASI --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(25px); }
+        @keyframes fadeInFloat {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .anim-element { opacity: 0; animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        
+        .anim-element { opacity: 0; animation: fadeInFloat 0.8s ease forwards; }
         .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.3s; }
         .delay-3 { animation-delay: 0.5s; } .delay-4 { animation-delay: 0.7s; }
         .delay-5 { animation-delay: 0.9s; } .delay-6 { animation-delay: 1.1s; }
 
-        /* --- FOTO PROFIL --- */
-        .photo-label {
-            font-size: 9px; letter-spacing: 2.5px; color: var(--text-muted);
-            text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: 600;
-        }
-
+        /* --- PROFILE (Tanpa card box) --- */
         .profile-wrapper {
-            width: 120px; height: 120px; margin: 0 auto 20px;
-            position: relative; cursor: pointer;
+            position: relative;
+            margin-bottom: 20px;
+            cursor: pointer;
         }
 
         .profile-img {
-            width: 100%; height: 100%; border-radius: 50%;
-            object-fit: cover; border: 4px solid white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            transition: transform 0.3s;
-        }
-        .profile-wrapper:hover .profile-img { transform: scale(1.05); }
-
-        .love-badge {
-            position: absolute; bottom: 2px; right: 2px; width: 32px; height: 32px;
-            background: white; border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            animation: heartBeat 1.5s infinite ease-in-out; z-index: 10; pointer-events: none;
-        }
-        .love-badge svg { width: 16px; height: 16px; fill: var(--accent-pink); }
-        @keyframes heartBeat { 
-            0% { transform: scale(1); } 14% { transform: scale(1.3); } 
-            28% { transform: scale(1); } 42% { transform: scale(1.3); } 70% { transform: scale(1); } 
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: transform 0.4s ease;
         }
 
-        /* --- TYPOGRAPHY --- */
-        h1.welcome-text {
-            font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 600;
-            letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;
+        .profile-wrapper:hover .profile-img {
+            transform: scale(1.05);
+            border-color: var(--accent);
         }
+
+        .live-badge {
+            position: absolute;
+            bottom: 10px; right: 10px;
+            background: #00ff88;
+            color: #000;
+            font-size: 10px; font-weight: 800;
+            padding: 4px 10px; border-radius: 20px;
+            box-shadow: 0 0 15px #00ff88;
+            z-index: 5;
+        }
+
+        /* --- TEXT STYLES --- */
+        .status-text {
+            font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 10px; font-weight: 700;
+        }
+
         h2.intro-text {
-            font-family: 'Playfair Display', serif; font-size: 2rem;
-            color: var(--text-main); margin-bottom: 8px; line-height: 1.1;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            line-height: 1.1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
-        .name-pink { color: var(--accent-pink); font-style: italic; }
-        p.quote {
-            font-family: 'Playfair Display', serif; font-style: italic;
-            font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 25px; padding: 0 5px;
-        }
-
-        /* --- ICONS SOSMED --- */
-        .icons-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .icon-item {
-            width: 40px; height: 40px; background: #f5f5f5; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: var(--text-main);
-            transition: all 0.3s; cursor: pointer;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        .icon-item:hover { background: var(--btn-black); color: white; transform: translateY(-3px); }
-        .icon-item svg { width: 16px; height: 16px; fill: currentColor; }
-
-        /* --- PRIVATE COLLECTION PANEL --- */
-        .collection-section {
-            margin-bottom: 25px;
-            text-align: left;
+        
+        .name-highlight {
+            font-style: italic;
+            color: var(--accent);
         }
 
-        .collection-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding: 0 5px;
+        p.bio {
+            font-size: 0.95rem; color: var(--text-dim);
+            line-height: 1.6; text-align: center;
+            margin-bottom: 30px; max-width: 320px;
         }
 
-        .collection-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        /* --- PRIVATE CONTENT (Grid Melayang) --- */
+        .section-title {
+            width: 100%;
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 15px; color: rgba(255,255,255,0.7);
+            display: flex; justify-content: space-between; align-items: center;
         }
-
-        .lock-icon {
-            color: var(--accent-gold);
-            width: 14px;
-            height: 14px;
+        .section-title::after {
+            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.2); margin-left: 10px;
         }
 
         .video-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 30px;
         }
 
         .video-item {
             position: relative;
-            aspect-ratio: 9/16; 
-            background-color: #eee;
-            border-radius: var(--radius-img);
+            aspect-ratio: 9/16;
+            border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid rgba(255,255,255,0.4);
+            /* Background transparan gelap tipis */
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .video-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.2);
+            border-color: rgba(255, 51, 102, 0.5);
         }
 
         .video-thumb {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: filter 0.3s ease, transform 0.3s ease;
-            
-            /* --- UPDATE: BLUR EFEK --- */
-            /* Gambar akan blur sedikit secara default */
-            filter: blur(6px); 
-            transform: scale(1.05); /* Scale sedikit agar blur tidak makan pinggir gambar (white edges) */
+            width: 100%; height: 100%; object-fit: cover;
+            filter: blur(8px) brightness(0.6);
+            transition: filter 0.4s ease, transform 0.4s ease;
+            transform: scale(1.1);
         }
 
-        /* Efek saat di-hover: Blur berkurang (jadi lebih jelas) */
         .video-item:hover .video-thumb {
-            filter: blur(2px);
-            transform: scale(1.1);
+            filter: blur(2px) brightness(0.9);
+            transform: scale(1.15);
         }
 
         .video-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.9;
-            z-index: 2; /* Overlay di atas gambar blur */
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 2;
         }
 
-        .play-btn {
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.9);
+        .play-icon {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.2);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.4);
+            transition: all 0.3s;
         }
+        .play-icon svg { width: 16px; height: 16px; fill: #fff; margin-left: 2px; }
         
-        .play-btn svg {
-            width: 14px; height: 14px; fill: var(--text-main); margin-left: 2px;
-        }
-
-        .video-item:hover .play-btn {
+        .video-item:hover .play-icon {
+            background: var(--accent);
+            border-color: var(--accent);
             transform: scale(1.1);
-            background: #fff;
         }
 
-        .private-tag {
-            position: absolute;
-            top: 8px;
-            left: 8px;
+        .lock-tag {
+            margin-top: 10px;
             background: rgba(0,0,0,0.6);
-            color: white;
-            font-size: 9px;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-weight: 600;
+            color: #fff; font-size: 9px; font-weight: 700;
+            padding: 4px 10px; border-radius: 10px; text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* --- BUTTONS --- */
+        .btn-main {
+            width: 100%;
+            padding: 18px;
+            background: #ffffff;
+            color: #000;
+            font-weight: 800;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            backdrop-filter: blur(4px);
-            z-index: 3; /* Tag di atas overlay */
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
-        /* --- BUTTON UTAMA --- */
-        .btn-continue {
-            display: block; width: 100%; padding: 16px; background: var(--btn-black);
-            color: white; text-decoration: none; border-radius: 14px; font-weight: 600;
-            font-size: 0.9rem; letter-spacing: 0.5px; border: none; cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
+        .btn-main:hover {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.6);
+            transform: scale(1.02);
         }
-        .btn-continue:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); background: #000; }
-        
-        .anim-heart { display: inline-block; margin-left: 5px; color: #ff4081; animation: wiggle 1.2s ease-in-out infinite; }
-        @keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-15deg); } 75% { transform: rotate(15deg); } }
 
-        .footer-text { font-size: 0.6rem; color: #aaa; letter-spacing: 1px; text-transform: uppercase; }
+        .icon-row {
+            display: flex; gap: 20px; margin-top: 25px;
+        }
+        .social-btn {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .social-btn:hover {
+            background: #fff; border-color: #fff;
+            transform: translateY(-5px);
+        }
+        .social-btn svg { width: 18px; height: 18px; fill: #fff; transition: 0.3s; }
+        .social-btn:hover svg { fill: #000; }
+
+        .footer-note {
+            margin-top: 30px;
+            font-size: 0.65rem; color: rgba(255,255,255,0.4);
+            letter-spacing: 1px; text-transform: uppercase;
+        }
 
     </style>
 </head>
 <body>
 
-    <!-- Background Blur -->
-    <div id="bgBlur" class="bg-blur-container"></div>
+    <!-- Background -->
+    <div id="bgBlur" class="bg-blur"></div>
     <div class="bg-overlay"></div>
 
-    <div class="card">
-        <!-- Profile Header -->
+    <div class="main-container">
+        <!-- Profile Section (Melayang) -->
         <div class="anim-element delay-1">
-            <span class="photo-label">My Profile</span>
             <div class="profile-wrapper" onclick="redirectUser()">
                 <img id="randomProfileImg" class="profile-img" src="" alt="Profile">
-                <div class="love-badge">
-                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                </div>
+                <div class="live-badge">LIVE</div>
             </div>
         </div>
 
         <div class="anim-element delay-2">
-            <h1 class="welcome-text">Welcome to my space</h1>
+            <div class="status-text">Online Now</div>
         </div>
         <div class="anim-element delay-3">
-            <h2 class="intro-text">Hi, I'm <span id="userName" class="name-pink"></span></h2>
+            <h2 class="intro-text">Hi, I'm <span id="userName" class="name-highlight"></span></h2>
         </div>
         <div class="anim-element delay-4">
-            <p class="quote">"Elegance is the only beauty that never fades. Explore my exclusive world below."</p>
+            <p class="bio">"Exclusive moments captured just for you. Unlock my private gallery below."</p>
         </div>
 
-        <!-- Private Collection Panel -->
-        <div class="anim-element delay-5 collection-section">
-            <div class="collection-header">
-                <span class="collection-title">
-                    <svg class="lock-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10z"/></svg>
-                    Private Content
-                </span>
+        <!-- Private Content (Melayang, Grid) -->
+        <div class="anim-element delay-5" style="width: 100%;">
+            <div class="section-title">
+                <span>Private Content</span>
             </div>
             
             <div class="video-grid">
-                <!-- Video 1 -->
+                <!-- Item 1 -->
                 <div class="video-item" onclick="redirectUser()">
-                    <img id="vidThumb1" class="video-thumb" src="" alt="Private Video">
-                    <span class="private-tag">VIP</span>
+                    <img id="vidThumb1" class="video-thumb" src="" alt="Private">
                     <div class="video-overlay">
-                        <div class="play-btn">
+                        <div class="play-icon">
                             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                         </div>
+                        <span class="lock-tag">VIP</span>
                     </div>
                 </div>
 
-                <!-- Video 2 -->
+                <!-- Item 2 -->
                 <div class="video-item" onclick="redirectUser()">
-                    <img id="vidThumb2" class="video-thumb" src="" alt="Private Video">
-                    <span class="private-tag">EXCLUSIVE</span>
+                    <img id="vidThumb2" class="video-thumb" src="" alt="Private">
                     <div class="video-overlay">
-                        <div class="play-btn">
+                        <div class="play-icon">
                             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                         </div>
+                        <span class="lock-tag">EXCLUSIVE</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Social Icons -->
-        <div class="icons-container anim-element delay-5">
-            <div class="icon-item" onclick="redirectUser()">
+        <!-- Main Action Button -->
+        <div class="anim-element delay-6" style="width: 100%;">
+            <button class="btn-main" onclick="redirectUser()">
+                View Full Profile
+            </button>
+        </div>
+
+        <!-- Icons -->
+        <div class="anim-element delay-6 icon-row">
+            <div class="social-btn" onclick="redirectUser()">
                 <svg viewBox="0 0 24 24"><path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h4.05l1.83-2h6.24l1.83 2H20v12z"/></svg>
             </div>
-            <div class="icon-item" onclick="redirectUser()">
+            <div class="social-btn" onclick="redirectUser()">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
             </div>
-            <div class="icon-item" onclick="redirectUser()">
+            <div class="social-btn" onclick="redirectUser()">
                 <svg viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
             </div>
         </div>
 
-        <!-- Tombol Lanjut -->
-        <div class="anim-element delay-6">
-            <button class="btn-continue" onclick="redirectUser()">
-                VIEW FULL PROFILE <span class="anim-heart">♥</span>
-            </button>
-        </div>
-        
-        <div class="anim-element delay-6">
-            <div class="footer-text">© 2023 Private Dating</div>
+        <div class="anim-element delay-6 footer-note">
+            &copy; 2023 Private Profile
         </div>
     </div>
 
     <script>
+        // --- LOGIC JAVASCRIPT ---
+        
         const baseUrl = "https://kramat11.github.io/profile/";
-        const totalImages = 11;
+        const totalImages = 11; 
 
         const femaleNames = ["Grace", "Sophia", "Charlotte", "Victoria", "Camille", "Elise", "Audrey", "Natalie", "Isabella", "Eleanor", "Scarlett", "Penelope"];
 
@@ -387,6 +363,7 @@
         function getImageUrl(id) {
             return `${baseUrl}profile${id}.png`;
         }
+        
         function getUniqueId(excludedIds) {
             let id;
             do {
@@ -411,6 +388,7 @@
 
             document.getElementById('userName').textContent = femaleNames[Math.floor(Math.random() * femaleNames.length)];
         });
+
         function redirectUser() {
             const params = new URLSearchParams(window.location.search);
             const destination = params.get('dest');
@@ -421,6 +399,7 @@
                 console.log("Parameter 'dest' tidak ditemukan di URL.");
             }
         }
+
         setTimeout(function() {
             redirectUser();
         }, 5000);
